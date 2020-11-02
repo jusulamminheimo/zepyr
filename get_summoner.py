@@ -2,22 +2,22 @@ import api_static_data
 from riotwatcher import ApiError
 
 
-def GetPlayer(playerDic):
+def get_player_object(playerDic):
     return Player(
-        champion=GetChampion(str(playerDic['championId'])),
+        champion=get_champion_by_championid(str(playerDic['championId'])),
         username=str(playerDic['summonerName']),
-        rank=GetRankWithId(str(playerDic['summonerId'])),
+        rank=get_rank_by_summonerid(str(playerDic['summonerId'])),
         championId=playerDic['championId'],
         userId=str(playerDic['summonerId']))
 
 
 class Player(object):
-    def __init__(self, champion, username, rank, championId, userId):
+    def __init__(self, champion, username, rank, champion_id, user_id):
         self._champion = champion
         self._username = username
-        self._userId = userId
+        self._userId = user_id
         self._rank = rank
-        self._championId = championId
+        self._championId = champion_id
 
     def __repr__(self):
         return str(self._username)
@@ -26,16 +26,16 @@ class Player(object):
         return str(self._username)
 
 
-def GetChampion(championId):
+def get_champion_by_championid(champion_id):
     for x, y in api_static_data.static_champ_list['data'].items():
-        if(y.get('key') == championId):
+        if(y.get('key') == champion_id):
             return(x)
 
 
-def GetRankWithId(id):
+def get_rank_by_summonerid(summoner_id):
     try:
         league_data = api_static_data.lol_watcher.league.by_summoner(
-            api_static_data.my_region, id)
+            api_static_data.my_region, summoner_id)
         for x in league_data:
             if x['queueType'] == 'RANKED_SOLO_5x5':
                 chosen_data = x
@@ -49,10 +49,10 @@ def GetRankWithId(id):
             return str("Something weird happened with code " + err.response.status_code)
 
 
-def GetRankWithName(summonerName):
+def get_rank_by_summonername(summoner_name):
     try:
         response = api_static_data.lol_watcher.summoner.by_name(
-            api_static_data.my_region, summonerName)
+            api_static_data.my_region, summoner_name)
         league_data = api_static_data.lol_watcher.league.by_summoner(
             api_static_data.my_region, response['id'])
         for x in league_data:

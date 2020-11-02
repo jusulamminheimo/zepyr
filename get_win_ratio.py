@@ -3,14 +3,14 @@ import time
 import api_request as api
 
 
-def GetWinRatioQuick(summonerName: str, championId: str, lolWatcher: LolWatcher):
-    summoner = api.GetSummonerWithName(summonerName)
+def get_win_ratio(summoner_name: str, champion_id: str, lolWatcher: LolWatcher):
+    summoner = api.GetSummonerWithName(summoner_name)
     if summoner.response == api.ResType.WAIT:
         time.sleep(summoner.waitTime)
-        summoner = api.GetSummonerWithName(summonerName)
+        summoner = api.GetSummonerWithName(summoner_name)
     if(summoner.response == api.ResType.SUCCESS):
         matchlist = api.GetMatchHistoryWithChampion(
-            summoner.data['accountId'], championId)
+            summoner.data['accountId'], champion_id)
         if matchlist.response == api.ResType.WAIT:
             time.sleep(matchlist.waitTime)
             matchlist = api.GetMatchHistoryWithChampion(matchlist)
@@ -34,22 +34,22 @@ def GetWinRatioQuick(summonerName: str, championId: str, lolWatcher: LolWatcher)
             match = api.GetMatchByMatchId(gameId)
 
         if(match.response == api.ResType.SUCCESS):
-            if(CheckWinQuick(match.data, championId) == True):
+            if(check_win(match.data, champion_id) == True):
                 wins += 1
 
     return str(int(wins/totalMatches*100))+"%"
 
 
-def CheckWinQuick(newMatch: dict, championId: str):
-    if 'teams' in newMatch:
-        team1Victory = 'Win' in newMatch['teams'][0].get('win')
+def check_win(new_match: dict, champion_id: str):
+    if 'teams' in new_match:
+        team1Victory = 'Win' in new_match['teams'][0].get('win')
         playerFound = False
-        for x in range(len(newMatch['participants'])):
-            if(str(championId) == str(newMatch['participants'][x]['championId'])):
+        for x in range(len(new_match['participants'])):
+            if(str(champion_id) == str(new_match['participants'][x]['championId'])):
                 playerFound = True
-                if(str(newMatch['participants'][x].get('teamId')) == str(100) and team1Victory == True):
+                if(str(new_match['participants'][x].get('teamId')) == str(100) and team1Victory == True):
                     return True
-                elif(str(newMatch['participants'][x].get('teamId')) == str(200) and team1Victory == False):
+                elif(str(new_match['participants'][x].get('teamId')) == str(200) and team1Victory == False):
                     return True
         if playerFound == False:
             print("Player not found")

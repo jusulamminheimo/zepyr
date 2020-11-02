@@ -21,9 +21,9 @@ rankIconGrandmaster = baseUrl + "7/76/Season_2019_-_Grandmaster_1.png"
 rankIconChallenger = baseUrl + "5/5f/Season_2019_-_Challenger_1.png"
 
 
-def GetRankIcon(rankStr):
-    if rankStr:
-        lowerCaseRank = rankStr.lower()
+def get_rank_icon(rank_str):
+    if rank_str:
+        lowerCaseRank = rank_str.lower()
         if "iron" in lowerCaseRank:
             return rankIconIron
         elif "bronze" in lowerCaseRank:
@@ -46,51 +46,51 @@ def GetRankIcon(rankStr):
         return ""
 
 
-async def UpdateEmbeds(postedEmbeds, embedList, playerList):
+async def update_embeds(posted_embeds, embed_list, player_list):
     for x in range(10):  # update embeds
         newEmbed = discord.Embed()
-        name = playerList[x]._username
+        name = player_list[x]._username
         fixedName = name.replace(' ', '+')
         linkToOpGG = "https://euw.op.gg/summoner/userName="+fixedName.lower()
 
-        nameWithChamp = playerList[x]._champion+" - "+name
+        nameWithChamp = player_list[x]._champion+" - "+name
 
         if x < 5:
             newEmbed.color = 0xff0033
         else:
             newEmbed.color = 0x085eff
 
-        if 'None' in playerList[x]._rank:
+        if 'None' in player_list[x]._rank:
             rank = "UNRANKED"
         else:
-            rank = playerList[x]._rank
+            rank = player_list[x]._rank
 
-        winRatioString = "WR "+str(get_win_ratio.GetWinRatioQuick(
-            playerList[x]._username, playerList[x]._championId, api_static_data.lol_watcher))
+        winRatioString = "WR "+str(get_win_ratio.get_win_ratio(
+            player_list[x]._username, player_list[x]._championId, api_static_data.lol_watcher))
         if 'None' in winRatioString:
             wrString = 'No games'
         else:
             wrString = winRatioString
         newEmbed.set_author(name=nameWithChamp, url=linkToOpGG,  icon_url=str(
-            "http://ddragon.leagueoflegends.com/cdn/" + api_static_data.latest + "/img/champion/" + playerList[x]._champion + ".png"))
+            "http://ddragon.leagueoflegends.com/cdn/" + api_static_data.latest + "/img/champion/" + player_list[x]._champion + ".png"))
         newEmbed.set_footer(text=rank+" ("+str(wrString)+")", icon_url=str(
-            GetRankIcon(playerList[x]._rank)))
-        embedList.append(newEmbed)
-        await postedEmbeds[x].edit(embed=newEmbed)
+            get_rank_icon(player_list[x]._rank)))
+        embed_list.append(newEmbed)
+        await posted_embeds[x].edit(embed=newEmbed)
 
 
-async def PostEmbeds(ctx, embedList):
+async def post_embeds(ctx, embed_list):
     postedEmbeds = []
     for x in range(10):  # post embeds without winratios
-        ebd = await ctx.channel.send(embed=embedList[x])
+        ebd = await ctx.channel.send(embed=embed_list[x])
         postedEmbeds.append(ebd)
         if(x == 4):
             await ctx.channel.send("- VS -")
     return postedEmbeds
 
 
-async def makeEmbeds(message, playerList):
-    embedList = []
+async def make_embeds(message, player_list):
+    embed_list = []
 
     for x in range(10):
         newEmbed = discord.Embed()
@@ -100,42 +100,42 @@ async def makeEmbeds(message, playerList):
         else:
             newEmbed.color = 0x085eff
 
-        name = playerList[x]._username
+        name = player_list[x]._username
         fixedName = name.replace(' ', '+')
         linkToOpGG = "https://euw.op.gg/summoner/userName="+fixedName.lower()
 
-        nameWithChamp = playerList[x]._champion+" - "+name
+        nameWithChamp = player_list[x]._champion+" - "+name
 
-        if 'None' in playerList[x]._rank:
+        if 'None' in player_list[x]._rank:
             rank = "UNRANKED"
         else:
-            rank = playerList[x]._rank
+            rank = player_list[x]._rank
 
         newEmbed.set_author(name=nameWithChamp, url=linkToOpGG,  icon_url=str(
-            "http://ddragon.leagueoflegends.com/cdn/" + api_static_data.latest + "/img/champion/" + playerList[x]._champion + ".png"))
+            "http://ddragon.leagueoflegends.com/cdn/" + api_static_data.latest + "/img/champion/" + player_list[x]._champion + ".png"))
         newEmbed.set_footer(text=rank, icon_url=str(
-            GetRankIcon(playerList[x]._rank)))
-        embedList.append(newEmbed)
+            get_rank_icon(player_list[x]._rank)))
+        embed_list.append(newEmbed)
 
     print("embeds created")
 
-    postedEmbeds = await PostEmbeds(message, embedList)
+    posted_embeds = await post_embeds(message, embed_list)
 
     print("embeds posted")
 
-    await UpdateEmbeds(postedEmbeds, embedList, playerList)
+    await update_embeds(posted_embeds, embed_list, player_list)
 
 
 # global readable match data
-matchGlobal = api.ApiResponse(None, 0, api.ResType.NULL)
+match_global = api.ApiResponse(None, 0, api.ResType.NULL)
 
 
-async def GetSummoner(summonerName):
-    summoner = api.GetPlayer(summonerName)
+async def get_summoner(summoner_name):
+    summoner = api.get_player_by_summonername(summoner_name)
 
     if summoner.response == api.ResType.WAIT:
         time.sleep(summoner.waitTime+1)
-        summoner = api.GetPlayer(summonerName)
+        summoner = api.get_player_by_summonername(summoner_name)
 
     if(summoner.response == api.ResType.NODATA):
         return summoner
@@ -144,28 +144,28 @@ async def GetSummoner(summonerName):
         return summoner
 
 
-async def SetTeams(summonerName):
-    summoner = api.GetPlayer(summonerName)
+async def set_teams(summoner_name):
+    summoner = api.get_player_by_summonername(summoner_name)
     if summoner.response == api.ResType.WAIT:
-        time.sleep(summoner.waitTime)
-        summoner = api.GetPlayer(summonerName)
+        time.sleep(summoner.wait_time)
+        summoner = api.GetPlayer(summoner_name)
 
     if(summoner.response == api.ResType.SUCCESS):
-        match = api.GetMatch(summoner.data['id'])
+        match = api.get_match_by_summonerid(summoner.data['id'])
         if match.response == api.ResType.WAIT:
             time.sleep(match.waitTime)
-            match = api.GetMatch(summoner.data['id'])
+            match = api.get_match(summoner.data['id'])
 
         elif(match.response == api.ResType.SUCCESS):
-            participantList = match.data['participants']
-            playerList = []
-            for players in participantList:
+            participant_list = match.data['participants']
+            player_list = []
+            for players in participant_list:
                 playerTemp = {'summonerName': players['summonerName'],
                               'summonerId': players['summonerId'], 'championId': players['championId']}
-                player = get_summoner.GetPlayer(playerTemp)
-                playerList.append(player)
+                player = api.get_player_by_summonername(playerTemp)
+                player_list.append(player)
 
-            match.data = playerList
+            match.data = player_list
             return match
 
         elif(match.response == api.ResType.NODATA):
