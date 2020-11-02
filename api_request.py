@@ -27,82 +27,82 @@ def get_player_by_summonername(summoner_name: str):
 
 def get_live_match_by_summoner_id(summoner_id: str):
     # current match
-    waitTime = 0
+    wait_time = 0
     response = ResType.NULL
     try:
         data = api_static_data.lol_watcher.spectator.by_summoner(
             api_static_data.my_region, summoner_id)
         response = ResType.SUCCESS
-        return ApiResponse(data, waitTime, response)
+        return ApiResponse(data, wait_time, response)
     except ApiError as err:
         if err.response.status_code == 429:  # too many requests
-            waitTime = err.response.headers['Retry-After']
+            wait_time = err.response.headers['Retry-After']
             response = ResType.WAIT
-            return ApiResponse(None, waitTime, response)
+            return ApiResponse(None, wait_time, response)
         elif err.response.status_code == 404:  # no data
             response = ResType.NODATA
-            return ApiResponse(None, waitTime, response)
+            return ApiResponse(None, wait_time, response)
 
 
 def get_match_by_match_id(match_id: str):
-    waitTime = 0
+    wait_time = 0
     response = ResType.NULL
     try:
         data = api_static_data.lol_watcher.match.by_id(
             api_static_data.my_region, match_id=match_id)
         response = ResType.SUCCESS
-        return ApiResponse(data, waitTime, response)
+        return ApiResponse(data, wait_time, response)
     except ApiError as err:
         print(err)
         if err.response.status_code == 429:  # too many requests
-            waitTime = err.response.headers['Retry-After']
+            wait_time = err.response.headers['Retry-After']
             response = ResType.WAIT
-            return ApiResponse(None, waitTime, response)
+            return ApiResponse(None, wait_time, response)
         elif err.response.status_code == 404:  # no data
             response = ResType.NODATA
-            return ApiResponse(None, waitTime, response)
+            return ApiResponse(None, wait_time, response)
 
 
 def get_summoner_by_summonername(summonerName):
-    waitTime = 0
+    wait_time = 0
     response = ResType.NULL
     try:
         data = api_static_data.lol_watcher.summoner.by_name(
             api_static_data.my_region, summonerName)
         response = ResType.SUCCESS
-        return ApiResponse(data, waitTime, response)
+        return ApiResponse(data, wait_time, response)
     except ApiError as err:
         if err.response.status_code == 429:  # too many requests
-            waitTime = err.response.headers['Retry-After']
+            wait_time = err.response.headers['Retry-After']
             response = ResType.WAIT
-            return ApiResponse(None, waitTime, response)
+            return ApiResponse(None, wait_time, response)
         elif err.response.status_code == 404:  # no data
             response = ResType.NODATA
-            return ApiResponse(None, waitTime, response)
+            return ApiResponse(None, wait_time, response)
 
 
 def get_matchhistory_by_champion(accountId, championId):
     # use 'accountId' from summoner object
-    waitTime = 0
+    wait_time = 0
     response = ResType.NULL
     try:
         data = api_static_data.lol_watcher.match.matchlist_by_account(
             region=api_static_data.my_region, encrypted_account_id=accountId, champion=championId)
         response = ResType.SUCCESS
-        return ApiResponse(data, waitTime, response)
+        return ApiResponse(data, wait_time, response)
     except ApiError as err:
         if err.response.status_code == 429:  # too many requests
-            waitTime = err.response.headers['Retry-After']
+            wait_time = err.response.headers['Retry-After']
             response = ResType.WAIT
-            return ApiResponse(None, waitTime, response)
+            return ApiResponse(None, wait_time, response)
         elif err.response.status_code == 404:  # no data
             response = ResType.NODATA
-            return ApiResponse(None, waitTime, response)
+            return ApiResponse(None, wait_time, response)
 
 
 def get_rank_with_summonerid(summoner_id):
     # use 'id' from summoner object
-    waitTime = 0
+    wait_time = 0
     response = ResType.NULL
     try:
         data = api_static_data.lol_watcher.league.by_summoner(
@@ -111,21 +111,21 @@ def get_rank_with_summonerid(summoner_id):
             if x['queueType'] == 'RANKED_SOLO_5x5':
                 chosen_data = x
                 response = ResType.SUCCESS
-                return ApiResponse(chosen_data['tier'] + " " + chosen_data['rank'], waitTime, response)
+                return ApiResponse(chosen_data['tier'] + " " + chosen_data['rank'], wait_time, response)
     except ApiError as err:
         if err.response.status_code == 429:  # too many requests
-            waitTime = err.response.headers['Retry-After']
+            wait_time = err.response.headers['Retry-After']
             response = ResType.WAIT
-            return ApiResponse(None, waitTime, response)
+            return ApiResponse(None, wait_time, response)
         elif err.response.status_code == 404:  # no data
             response = ResType.NODATA
-            return ApiResponse(None, waitTime, response)
+            return ApiResponse(None, wait_time, response)
 
 
 class ApiResponse(object):
-    def __init__(self, data, waitTime, response: Enum):
+    def __init__(self, data, wait_time, response: Enum):
         self.data = data
-        self.waitTime = waitTime
+        self.wait_time = wait_time
         self.response = response
 
     def __repr__(self):
