@@ -23,4 +23,5 @@ Run the bot by running `main.py`
 ### Bot commands
 `!game username` - get live game of the user. Also gives winratios of champions on the embed messages. Winratios are calculated in the limits of api key restrictions.
 
+
 `!rank username` - get soloqueue rank of player
