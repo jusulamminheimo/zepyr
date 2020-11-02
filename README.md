@@ -13,8 +13,7 @@ discord_bot_token = '' # Your discord token
 log_channel_id = # Discord text channel id which you want to post logging to, type is int
 
 lol_watcher = LolWatcher(riot_api_key)
-latest = lol_watcher.data_dragon.versions_for_region(my_region)[
-    'n']['champion']
+latest = lol_watcher.data_dragon.versions_for_region(my_region)['n']['champion']
 static_champ_list = lol_watcher.data_dragon.champions(latest, False, 'en_US')
 ```
 
