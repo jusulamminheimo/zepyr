@@ -1,5 +1,5 @@
 # Zepyr
-Zepyr is a Discord bot made for pulling data from [Riot Games API](https://developer.riotgames.com/apis)
+Zepyr is a Discord bot made for pulling data from [Riot Games API](https://developer.riotgames.com/apis).
 
 ### Building and running
 This bot is made with [discord.py](https://github.com/Rapptz/discord.py). For setuping the bot, reference to [quickstart guide](https://discordpy.readthedocs.io/en/latest/quickstart.html).
