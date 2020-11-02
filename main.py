@@ -30,14 +30,6 @@ class MyClient(discord.Client):
             elif(playerList.response == api.ResType.NODATA):
                 await message.channel.send("Match not found")
 
-        elif message.content.startswith("!player"):
-            username = message.content[8:]
-            player = await post_embeds.GetSummoner(username)
-            if(player.response == api.ResType.SUCCESS):
-                await message.channel.send("player found")
-            elif(player.response == api.ResType.NODATA):
-                await message.channel.send("player not found")
-
         elif message.content.startswith("!rank"):
             checkRankName = message.content[6:]
             summoner = api.GetSummonerWithId(checkRankName)
@@ -45,10 +37,6 @@ class MyClient(discord.Client):
                 rank = api.GetRankWithId(summoner.data['id'])
                 if(rank.response == api.ResType.SUCCESS):
                     await message.channel.send(rank.data)
-
-        elif message.content.startswith("!champ"):
-            championName = message.content[7:]
-            await message.channel.send(get_summoner.GetChampion(championName))
 
     async def on_error(event, *args, **kwargs):
         embed = discord.Embed(title=':x: Event Error', colour=0xe74c3c)
