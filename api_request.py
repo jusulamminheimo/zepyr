@@ -7,25 +7,25 @@ api_key = api_static_data.riot_api_key
 
 
 def get_player_by_summonername(summoner_name: str):
-    waitTime = 0
+    wait_time = 0
     response = ResType.NULL
     try:
         data = api_static_data.lol_watcher.summoner.by_name(
             api_static_data.my_region, summoner_name)
         print(data)
         response = ResType.SUCCESS
-        return ApiResponse(data, waitTime, response)
+        return ApiResponse(data, wait_time, response)
     except ApiError as err:
         if err.response.status_code == 429:  # too many requests
-            waitTime = err.response.headers['Retry-After']
+            wait_time = err.response.headers['Retry-After']
             response = ResType.WAIT
-            return ApiResponse(None, waitTime, response)
+            return ApiResponse(None, wait_time, response)
         elif err.response.status_code == 404:  # no data
             response = ResType.NODATA
-            return ApiResponse(None, waitTime, response)
+            return ApiResponse(None, wait_time, response)
 
 
-def get_match_by_summonerid(summoner_id: str):
+def get_live_match_by_summoner_id(summoner_id: str):
     # current match
     waitTime = 0
     response = ResType.NULL
@@ -100,13 +100,13 @@ def get_matchhistory_by_champion(accountId, championId):
             return ApiResponse(None, waitTime, response)
 
 
-def get_rank_with_summonerid(summonerId):
+def get_rank_with_summonerid(summoner_id):
     # use 'id' from summoner object
     waitTime = 0
     response = ResType.NULL
     try:
         data = api_static_data.lol_watcher.league.by_summoner(
-            api_static_data.my_region, summonerId)
+            api_static_data.my_region, summoner_id)
         for x in data:
             if x['queueType'] == 'RANKED_SOLO_5x5':
                 chosen_data = x

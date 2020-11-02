@@ -125,11 +125,6 @@ async def make_embeds(message, player_list):
 
     await update_embeds(posted_embeds, embed_list, player_list)
 
-
-# global readable match data
-match_global = api.ApiResponse(None, 0, api.ResType.NULL)
-
-
 async def get_summoner(summoner_name):
     summoner = api.get_player_by_summonername(summoner_name)
 
@@ -151,10 +146,10 @@ async def set_teams(summoner_name):
         summoner = api.get_player_by_summonername(summoner_name)
 
     if(summoner.response == api.ResType.SUCCESS):
-        match = api.get_match_by_summonerid(summoner.data['id'])
+        match = api.get_live_match_by_summoner_id(summoner.data['id'])
         if match.response == api.ResType.WAIT:
             time.sleep(match.waitTime)
-            match = api.get_match(summoner.data['id'])
+            match = api.get_live_match_by_summoner_id(summoner.data['id'])
 
         elif(match.response == api.ResType.SUCCESS):
             participant_list = match.data['participants']
