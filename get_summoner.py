@@ -1,16 +1,6 @@
 import api_static_data
 from riotwatcher import ApiError
 
-
-def get_player_object(playerDic):
-    return Player(
-        champion=get_champion_by_championid(str(playerDic['championId'])),
-        username=str(playerDic['summonerName']),
-        rank=get_rank_by_summonerid(str(playerDic['summonerId'])),
-        championId=playerDic['championId'],
-        userId=str(playerDic['summonerId']))
-
-
 class Player(object):
     def __init__(self, champion, username, rank, champion_id, user_id):
         self._champion = champion
@@ -24,6 +14,14 @@ class Player(object):
 
     def __str__(self):
         return str(self._username)
+
+def get_player_object(playerDic):
+    return Player(
+        champion=get_champion_by_championid(str(playerDic['championId'])),
+        username=str(playerDic['summonerName']),
+        rank=get_rank_by_summonerid(str(playerDic['summonerId'])),
+        champion_id=playerDic['championId'],
+        user_id=str(playerDic['summonerId']))
 
 
 def get_champion_by_championid(champion_id):

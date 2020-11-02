@@ -125,20 +125,6 @@ async def make_embeds(message, player_list):
 
     await update_embeds(posted_embeds, embed_list, player_list)
 
-async def get_summoner(summoner_name):
-    summoner = api.get_player_by_summonername(summoner_name)
-
-    if summoner.response == api.ResType.WAIT:
-        time.sleep(summoner.waitTime+1)
-        summoner = api.get_player_by_summonername(summoner_name)
-
-    if(summoner.response == api.ResType.NODATA):
-        return summoner
-
-    elif(summoner.response == api.ResType.SUCCESS):
-        return summoner
-
-
 async def set_teams(summoner_name):
     summoner = api.get_player_by_summonername(summoner_name)
     if summoner.response == api.ResType.WAIT:
@@ -157,7 +143,7 @@ async def set_teams(summoner_name):
             for players in participant_list:
                 playerTemp = {'summonerName': players['summonerName'],
                               'summonerId': players['summonerId'], 'championId': players['championId']}
-                player = api.get_player_by_summonername(playerTemp)
+                player = get_summoner.get_player_object(playerTemp)
                 player_list.append(player)
 
             match.data = player_list
