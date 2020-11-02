@@ -6,13 +6,13 @@ import api_request as api
 def get_win_ratio(summoner_name: str, champion_id: str, lolWatcher: LolWatcher):
     summoner = api.get_summoner_by_summonername(summoner_name)
     if summoner.response == api.ResType.WAIT:
-        time.sleep(summoner.waitTime)
+        time.sleep(summoner.wait_time)
         summoner = api.get_summoner_by_summonername(summoner_name)
     if(summoner.response == api.ResType.SUCCESS):
         matchlist = api.get_matchhistory_by_champion(
             summoner.data['accountId'], champion_id)
         if matchlist.response == api.ResType.WAIT:
-            time.sleep(matchlist.waitTime)
+            time.sleep(matchlist.wait_time)
             matchlist = api.get_matchhistory_by_champion(matchlist)
         if(matchlist.response != api.ResType.SUCCESS):
             return 'No data'
@@ -30,7 +30,7 @@ def get_win_ratio(summoner_name: str, champion_id: str, lolWatcher: LolWatcher):
 
         match = api.get_match_by_match_id(gameId)
         if(match.response == api.ResType.WAIT):
-            time.sleep(match.waitTime)
+            time.sleep(match.wait_time)
             match = api.get_match_by_match_id(gameId)
 
         if(match.response == api.ResType.SUCCESS):

@@ -134,7 +134,7 @@ async def set_teams(summoner_name):
     if(summoner.response == api.ResType.SUCCESS):
         match = api.get_live_match_by_summoner_id(summoner.data['id'])
         if match.response == api.ResType.WAIT:
-            time.sleep(match.waitTime)
+            time.sleep(match.wait_time)
             match = api.get_live_match_by_summoner_id(summoner.data['id'])
 
         elif(match.response == api.ResType.SUCCESS):
