@@ -148,7 +148,7 @@ async def set_teams(summoner_name):
     summoner = api.get_player_by_summonername(summoner_name)
     if summoner.response == api.ResType.WAIT:
         time.sleep(summoner.wait_time)
-        summoner = api.GetPlayer(summoner_name)
+        summoner = api.get_player_by_summonername(summoner_name)
 
     if(summoner.response == api.ResType.SUCCESS):
         match = api.get_match_by_summonerid(summoner.data['id'])

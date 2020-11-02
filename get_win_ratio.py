@@ -4,16 +4,16 @@ import api_request as api
 
 
 def get_win_ratio(summoner_name: str, champion_id: str, lolWatcher: LolWatcher):
-    summoner = api.GetSummonerWithName(summoner_name)
+    summoner = api.get_summoner_by_summonername(summoner_name)
     if summoner.response == api.ResType.WAIT:
         time.sleep(summoner.waitTime)
-        summoner = api.GetSummonerWithName(summoner_name)
+        summoner = api.get_summoner_by_summonername(summoner_name)
     if(summoner.response == api.ResType.SUCCESS):
-        matchlist = api.GetMatchHistoryWithChampion(
+        matchlist = api.get_matchhistory_by_champion(
             summoner.data['accountId'], champion_id)
         if matchlist.response == api.ResType.WAIT:
             time.sleep(matchlist.waitTime)
-            matchlist = api.GetMatchHistoryWithChampion(matchlist)
+            matchlist = api.get_matchhistory_by_champion(matchlist)
         if(matchlist.response != api.ResType.SUCCESS):
             return 'No data'
 
@@ -28,10 +28,10 @@ def get_win_ratio(summoner_name: str, champion_id: str, lolWatcher: LolWatcher):
         totalMatches += 1
         gameId = match['gameId']
 
-        match = api.GetMatchByMatchId(gameId)
+        match = api.get_match_by_match_id(gameId)
         if(match.response == api.ResType.WAIT):
             time.sleep(match.waitTime)
-            match = api.GetMatchByMatchId(gameId)
+            match = api.get_match_by_match_id(gameId)
 
         if(match.response == api.ResType.SUCCESS):
             if(check_win(match.data, champion_id) == True):
