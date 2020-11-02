@@ -16,13 +16,7 @@ def get_player_by_summonername(summoner_name: str):
         response = ResType.SUCCESS
         return ApiResponse(data, wait_time, response)
     except ApiError as err:
-        if err.response.status_code == 429:  # too many requests
-            wait_time = err.response.headers['Retry-After']
-            response = ResType.WAIT
-            return ApiResponse(None, wait_time, response)
-        elif err.response.status_code == 404:  # no data
-            response = ResType.NODATA
-            return ApiResponse(None, wait_time, response)
+        return get_error_response(err)
 
 
 def get_live_match_by_summoner_id(summoner_id: str):
@@ -35,13 +29,7 @@ def get_live_match_by_summoner_id(summoner_id: str):
         response = ResType.SUCCESS
         return ApiResponse(data, wait_time, response)
     except ApiError as err:
-        if err.response.status_code == 429:  # too many requests
-            wait_time = err.response.headers['Retry-After']
-            response = ResType.WAIT
-            return ApiResponse(None, wait_time, response)
-        elif err.response.status_code == 404:  # no data
-            response = ResType.NODATA
-            return ApiResponse(None, wait_time, response)
+        return get_error_response(err)
 
 
 def get_match_by_match_id(match_id: str):
@@ -53,14 +41,7 @@ def get_match_by_match_id(match_id: str):
         response = ResType.SUCCESS
         return ApiResponse(data, wait_time, response)
     except ApiError as err:
-        print(err)
-        if err.response.status_code == 429:  # too many requests
-            wait_time = err.response.headers['Retry-After']
-            response = ResType.WAIT
-            return ApiResponse(None, wait_time, response)
-        elif err.response.status_code == 404:  # no data
-            response = ResType.NODATA
-            return ApiResponse(None, wait_time, response)
+        return get_error_response(err)
 
 
 def get_summoner_by_summonername(summonerName):
@@ -72,13 +53,7 @@ def get_summoner_by_summonername(summonerName):
         response = ResType.SUCCESS
         return ApiResponse(data, wait_time, response)
     except ApiError as err:
-        if err.response.status_code == 429:  # too many requests
-            wait_time = err.response.headers['Retry-After']
-            response = ResType.WAIT
-            return ApiResponse(None, wait_time, response)
-        elif err.response.status_code == 404:  # no data
-            response = ResType.NODATA
-            return ApiResponse(None, wait_time, response)
+        return get_error_response(err)
 
 
 def get_matchhistory_by_champion(accountId, championId):
@@ -91,13 +66,7 @@ def get_matchhistory_by_champion(accountId, championId):
         response = ResType.SUCCESS
         return ApiResponse(data, wait_time, response)
     except ApiError as err:
-        if err.response.status_code == 429:  # too many requests
-            wait_time = err.response.headers['Retry-After']
-            response = ResType.WAIT
-            return ApiResponse(None, wait_time, response)
-        elif err.response.status_code == 404:  # no data
-            response = ResType.NODATA
-            return ApiResponse(None, wait_time, response)
+        return get_error_response(err)
 
 
 def get_rank_with_summonerid(summoner_id):
@@ -113,13 +82,20 @@ def get_rank_with_summonerid(summoner_id):
                 response = ResType.SUCCESS
                 return ApiResponse(chosen_data['tier'] + " " + chosen_data['rank'], wait_time, response)
     except ApiError as err:
-        if err.response.status_code == 429:  # too many requests
-            wait_time = err.response.headers['Retry-After']
-            response = ResType.WAIT
-            return ApiResponse(None, wait_time, response)
-        elif err.response.status_code == 404:  # no data
-            response = ResType.NODATA
-            return ApiResponse(None, wait_time, response)
+        return get_error_response(err)
+
+
+def get_error_response(error):
+    if error.response.status_code == 429:  # too many requests
+        wait_time = error.response.headers['Retry-After']
+        response = ResType.WAIT
+        return ApiResponse(None, wait_time, response)
+    elif error.response.status_code == 404:  # no data
+        response = ResType.NODATA
+        return ApiResponse(None, 0, response)
+    else:  # other error / log entry should be created
+        response = ResType.NODATA
+        return ApiResponse(None, 0, response)
 
 
 class ApiResponse(object):
