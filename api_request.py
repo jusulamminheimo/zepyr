@@ -56,13 +56,13 @@ def get_summoner_by_summonername(summonerName):
         return get_error_response(err)
 
 
-def get_matchhistory_by_champion(accountId, championId):
-    # use 'accountId' from summoner object
+def get_matchhistory_by_champion(account_id, championId):
+    # use 'account_id' from summoner object
     wait_time = 0
     response = ResType.NULL
     try:
         data = api_static_data.lol_watcher.match.matchlist_by_account(
-            region=api_static_data.my_region, encrypted_account_id=accountId, champion=championId)
+            region=api_static_data.my_region, encrypted_account_id=account_id, champion=championId)
         response = ResType.SUCCESS
         return ApiResponse(data, wait_time, response)
     except ApiError as err:
