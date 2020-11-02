@@ -44,7 +44,7 @@ def CheckWinQuick(newMatch: dict, championId: str):
     if 'teams' in newMatch:
         team1Victory = 'Win' in newMatch['teams'][0].get('win')
         playerFound = False
-        for x in range(10):
+        for x in range(len(newMatch['participants'])):
             if(str(championId) == str(newMatch['participants'][x]['championId'])):
                 playerFound = True
                 if(str(newMatch['participants'][x].get('teamId')) == str(100) and team1Victory == True):
