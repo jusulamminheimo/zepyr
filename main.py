@@ -23,18 +23,18 @@ class MyClient(discord.Client):
     async def on_message(self, message):
         if message.content.startswith("!game"):
             username = message.content[6:]
-            playerList = await post_embeds.SetTeams(username)
-            if(playerList.response == api.ResType.SUCCESS):
+            player_list = await post_embeds.set_teams(username)
+            if(player_list.response == api.ResType.SUCCESS):
                 await message.channel.send("Match found, processing")
-                await post_embeds.makeEmbeds(message, playerList.data)
-            elif(playerList.response == api.ResType.NODATA):
+                await post_embeds.make_embeds(message, player_list.data)
+            elif(player_list.response == api.ResType.NODATA):
                 await message.channel.send("Match not found")
 
         elif message.content.startswith("!rank"):
             checkRankName = message.content[6:]
-            summoner = api.GetSummonerWithId(checkRankName)
+            summoner = api.get_summoner_by_summonername(checkRankName)
             if(summoner.response == api.ResType.SUCCESS):
-                rank = api.GetRankWithId(summoner.data['id'])
+                rank = api.get_rank_with_summonerid(summoner.data['id'])
                 if(rank.response == api.ResType.SUCCESS):
                     await message.channel.send(rank.data)
 
