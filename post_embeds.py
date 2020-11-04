@@ -9,6 +9,7 @@ import api_static_data
 import time
 import get_summoner
 import api_request as api
+import discord_logger as dlogger
 
 
 baseUrl = "https://static.wikia.nocookie.net/leagueoflegends/images/"

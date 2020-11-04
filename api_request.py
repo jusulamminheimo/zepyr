@@ -2,9 +2,9 @@ from enum import Enum
 from riotwatcher import LolWatcher, ApiError
 import api_static_data
 import discord_logger as dlogger
+import json
 
 api_key = api_static_data.riot_api_key
-
 
 async def get_player_by_summonername(summoner_name: str):
     wait_time = 0
@@ -13,7 +13,7 @@ async def get_player_by_summonername(summoner_name: str):
     try:
         data = api_static_data.lol_watcher.summoner.by_name(
             api_static_data.my_region, summoner_name)
-        await dlogger.log_multi(f"```api response {response._name_}```\n```json\n{data}\n")
+        await dlogger.log_multi(body_to_json_string(response._name_,data))
         response = ResType.SUCCESS
         return ApiResponse(data, wait_time, response)
     except ApiError as err:
@@ -31,7 +31,7 @@ async def get_live_match_by_summoner_id(summoner_id: str):
         data = api_static_data.lol_watcher.spectator.by_summoner(
             api_static_data.my_region, summoner_id)
         response = ResType.SUCCESS
-        await dlogger.log_multi(f"```api response {response._name_}```\n```json\n{data}\n")
+        await dlogger.log(f"{response._name_}")
         return ApiResponse(data, wait_time, response)
     except ApiError as err:
         error_response = get_error_response(err)
@@ -47,7 +47,7 @@ async def get_match_by_match_id(match_id: str):
         data = api_static_data.lol_watcher.match.by_id(
             api_static_data.my_region, match_id=match_id)
         response = ResType.SUCCESS
-        await dlogger.log_multi(f"```api response {response._name_}```\n```json\n{data}\n")
+        await dlogger.log(f"{response._name_}")
         return ApiResponse(data, wait_time, response)
     except ApiError as err:
         error_response = get_error_response(err)
@@ -63,7 +63,7 @@ async def get_summoner_by_summonername(summonerName):
         data = api_static_data.lol_watcher.summoner.by_name(
             api_static_data.my_region, summonerName)
         response = ResType.SUCCESS
-        await dlogger.log_multi(f"```api response {response._name_}```\n```json\n{data}\n")
+        await dlogger.log_multi(body_to_json_string(response._name_,data))
         return ApiResponse(data, wait_time, response)
     except ApiError as err:
         error_response = get_error_response(err)
@@ -80,7 +80,7 @@ async def get_matchhistory_by_champion(account_id, championId):
         data = api_static_data.lol_watcher.match.matchlist_by_account(
             region=api_static_data.my_region, encrypted_account_id=account_id, champion=championId)
         response = ResType.SUCCESS
-        await dlogger.log_multi(f"```api response {response._name_}```\n```json\n{data}\n")
+        await dlogger.log(f"{response._name_}")
         return ApiResponse(data, wait_time, response)
     except ApiError as err:
         error_response = get_error_response(err)
@@ -100,7 +100,7 @@ async def get_rank_with_summonerid(summoner_id):
             if x['queueType'] == 'RANKED_SOLO_5x5':
                 chosen_data = x
                 response = ResType.SUCCESS
-                await dlogger.log_multi(f"```api response {response._name_}```\n```json\n{data}\n")
+                await dlogger.log_multi(body_to_json_string(response._name_,data))
                 return ApiResponse(chosen_data['tier'] + " " + chosen_data['rank'], wait_time, response)
     except ApiError as err:
         error_response = get_error_response(err)
@@ -120,6 +120,8 @@ def get_error_response(error):
         response = ResType.DENIED
         return ApiResponse(None, 0, response)
 
+def body_to_json_string(response, data):
+    return f"```api response {response}``````json\n{json.dumps(data, indent=4, sort_keys=True)}\n"
 
 class ApiResponse(object):
     def __init__(self, data, wait_time, response: Enum):
