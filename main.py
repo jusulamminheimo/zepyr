@@ -29,6 +29,8 @@ class MyClient(discord.Client):
                 await post_embeds.make_embeds(message, player_list.data)
             elif(player_list.response == api.ResType.NODATA):
                 await message.channel.send("Match not found")
+            elif(player_list.response == api.ResType.DENIED):
+                await message.channel.send("API KEY EXPIRED")
 
         elif message.content.startswith("!rank"):
             checkRankName = message.content[6:]

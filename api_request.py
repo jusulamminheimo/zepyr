@@ -6,75 +6,75 @@ import api_static_data
 api_key = api_static_data.riot_api_key
 
 
-def get_player_by_summonername(summoner_name: str):
+async def get_player_by_summonername(summoner_name: str):
     wait_time = 0
     response = ResType.NULL
     try:
-        data = api_static_data.lol_watcher.summoner.by_name(
+        data = await api_static_data.lol_watcher.summoner.by_name(
             api_static_data.my_region, summoner_name)
         print(data)
         response = ResType.SUCCESS
         return ApiResponse(data, wait_time, response)
     except ApiError as err:
-        return get_error_response(err)
+        return await get_error_response(err)
 
 
-def get_live_match_by_summoner_id(summoner_id: str):
+async def get_live_match_by_summoner_id(summoner_id: str):
     # current match
     wait_time = 0
     response = ResType.NULL
     try:
-        data = api_static_data.lol_watcher.spectator.by_summoner(
+        data = await api_static_data.lol_watcher.spectator.by_summoner(
             api_static_data.my_region, summoner_id)
         response = ResType.SUCCESS
         return ApiResponse(data, wait_time, response)
     except ApiError as err:
-        return get_error_response(err)
+        return await get_error_response(err)
 
 
-def get_match_by_match_id(match_id: str):
+async def get_match_by_match_id(match_id: str):
     wait_time = 0
     response = ResType.NULL
     try:
-        data = api_static_data.lol_watcher.match.by_id(
+        data = await api_static_data.lol_watcher.match.by_id(
             api_static_data.my_region, match_id=match_id)
         response = ResType.SUCCESS
         return ApiResponse(data, wait_time, response)
     except ApiError as err:
-        return get_error_response(err)
+        return await get_error_response(err)
 
 
-def get_summoner_by_summonername(summonerName):
+async def get_summoner_by_summonername(summonerName):
     wait_time = 0
     response = ResType.NULL
     try:
-        data = api_static_data.lol_watcher.summoner.by_name(
+        data = await api_static_data.lol_watcher.summoner.by_name(
             api_static_data.my_region, summonerName)
         response = ResType.SUCCESS
         return ApiResponse(data, wait_time, response)
     except ApiError as err:
-        return get_error_response(err)
+        return await get_error_response(err)
 
 
-def get_matchhistory_by_champion(account_id, championId):
+async def get_matchhistory_by_champion(account_id, championId):
     # use 'account_id' from summoner object
     wait_time = 0
     response = ResType.NULL
     try:
-        data = api_static_data.lol_watcher.match.matchlist_by_account(
+        data = await api_static_data.lol_watcher.match.matchlist_by_account(
             region=api_static_data.my_region, encrypted_account_id=account_id, champion=championId)
         response = ResType.SUCCESS
         return ApiResponse(data, wait_time, response)
     except ApiError as err:
-        return get_error_response(err)
+        return await get_error_response(err)
 
 
-def get_rank_with_summonerid(summoner_id):
+async def get_rank_with_summonerid(summoner_id):
     # use 'id' from summoner object
     wait_time = 0
     response = ResType.NULL
     try:
-        data = api_static_data.lol_watcher.league.by_summoner(
+        data = await api_static_data.lol_watcher.league.by_summoner(
             api_static_data.my_region, summoner_id)
         for x in data:
             if x['queueType'] == 'RANKED_SOLO_5x5':
@@ -82,10 +82,10 @@ def get_rank_with_summonerid(summoner_id):
                 response = ResType.SUCCESS
                 return ApiResponse(chosen_data['tier'] + " " + chosen_data['rank'], wait_time, response)
     except ApiError as err:
-        return get_error_response(err)
+        return await get_error_response(err)
 
 
-def get_error_response(error):
+async def get_error_response(error):
     if error.response.status_code == 429:  # too many requests
         wait_time = error.response.headers['Retry-After']
         response = ResType.WAIT
@@ -94,7 +94,7 @@ def get_error_response(error):
         response = ResType.NODATA
         return ApiResponse(None, 0, response)
     else:  # other error / log entry should be created
-        response = ResType.NODATA
+        response = ResType.DENIED
         return ApiResponse(None, 0, response)
 
 
@@ -112,7 +112,9 @@ class ApiResponse(object):
 
 
 class ResType(Enum):
+    """api response types Enum"""
     NULL = 0
     SUCCESS = 1
     WAIT = 2
     NODATA = 3
+    DENIED = 4

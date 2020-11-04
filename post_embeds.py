@@ -1,7 +1,9 @@
+import asyncio
 from logging import error
 from discord import player
 from riotwatcher import LolWatcher, ApiError
 import discord
+from api_request import ResType
 import get_win_ratio
 import api_static_data
 import time
@@ -126,16 +128,16 @@ async def make_embeds(message, player_list):
     await update_embeds(posted_embeds, embed_list, player_list)
 
 async def set_teams(summoner_name):
-    summoner = api.get_player_by_summonername(summoner_name)
+    summoner = await api.get_player_by_summonername(summoner_name)
     if summoner.response == api.ResType.WAIT:
-        time.sleep(summoner.wait_time)
-        summoner = api.get_player_by_summonername(summoner_name)
+        asyncio.sleep(summoner.wait_time)
+        summoner = await api.get_player_by_summonername(summoner_name)
 
     if(summoner.response == api.ResType.SUCCESS):
-        match = api.get_live_match_by_summoner_id(summoner.data['id'])
+        match = await api.get_live_match_by_summoner_id(summoner.data['id'])
         if match.response == api.ResType.WAIT:
-            time.sleep(match.wait_time)
-            match = api.get_live_match_by_summoner_id(summoner.data['id'])
+            asyncio.sleep(match.wait_time)
+            match = await api.get_live_match_by_summoner_id(summoner.data['id'])
 
         elif(match.response == api.ResType.SUCCESS):
             participant_list = match.data['participants']
@@ -145,7 +147,7 @@ async def set_teams(summoner_name):
                               'summonerId': players['summonerId'], 'championId': players['championId']}
                 player = get_summoner.get_player_object(playerTemp)
                 player_list.append(player)
-
+            print(player_list)
             match.data = player_list
             return match
 
@@ -153,4 +155,7 @@ async def set_teams(summoner_name):
             return match
 
     elif(summoner.response == api.ResType.NODATA):
+        return summoner
+
+    elif(summoner.response == api.ResType.DENIED):
         return summoner
