@@ -7,6 +7,7 @@ import asyncio
 import api_request as api
 import traceback
 import datetime
+import discord_logger as dlogger
 
 
 lol_watcher = api_static_data.lol_watcher
@@ -50,6 +51,7 @@ class MyClient(discord.Client):
 
 
 client = MyClient()
+dlogger.client = client
 loop = asyncio.get_event_loop()
 loop.run_until_complete(client.start(
     api_static_data.discord_bot_token))
