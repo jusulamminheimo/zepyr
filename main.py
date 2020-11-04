@@ -34,9 +34,9 @@ class MyClient(discord.Client):
 
         elif message.content.startswith("!rank"):
             checkRankName = message.content[6:]
-            summoner = api.get_summoner_by_summonername(checkRankName)
+            summoner = await api.get_summoner_by_summonername(checkRankName)
             if(summoner.response == api.ResType.SUCCESS):
-                rank = api.get_rank_with_summonerid(summoner.data['id'])
+                rank = await api.get_rank_with_summonerid(summoner.data['id'])
                 if(rank.response == api.ResType.SUCCESS):
                     await message.channel.send(rank.data)
 

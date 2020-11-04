@@ -10,13 +10,13 @@ async def get_player_by_summonername(summoner_name: str):
     wait_time = 0
     response = ResType.NULL
     try:
-        data = await api_static_data.lol_watcher.summoner.by_name(
+        data = api_static_data.lol_watcher.summoner.by_name(
             api_static_data.my_region, summoner_name)
         print(data)
         response = ResType.SUCCESS
         return ApiResponse(data, wait_time, response)
     except ApiError as err:
-        return await get_error_response(err)
+        return get_error_response(err)
 
 
 async def get_live_match_by_summoner_id(summoner_id: str):
@@ -24,36 +24,36 @@ async def get_live_match_by_summoner_id(summoner_id: str):
     wait_time = 0
     response = ResType.NULL
     try:
-        data = await api_static_data.lol_watcher.spectator.by_summoner(
+        data = api_static_data.lol_watcher.spectator.by_summoner(
             api_static_data.my_region, summoner_id)
         response = ResType.SUCCESS
         return ApiResponse(data, wait_time, response)
     except ApiError as err:
-        return await get_error_response(err)
+        return get_error_response(err)
 
 
 async def get_match_by_match_id(match_id: str):
     wait_time = 0
     response = ResType.NULL
     try:
-        data = await api_static_data.lol_watcher.match.by_id(
+        data = api_static_data.lol_watcher.match.by_id(
             api_static_data.my_region, match_id=match_id)
         response = ResType.SUCCESS
         return ApiResponse(data, wait_time, response)
     except ApiError as err:
-        return await get_error_response(err)
+        return get_error_response(err)
 
 
 async def get_summoner_by_summonername(summonerName):
     wait_time = 0
     response = ResType.NULL
     try:
-        data = await api_static_data.lol_watcher.summoner.by_name(
+        data = api_static_data.lol_watcher.summoner.by_name(
             api_static_data.my_region, summonerName)
         response = ResType.SUCCESS
         return ApiResponse(data, wait_time, response)
     except ApiError as err:
-        return await get_error_response(err)
+        return get_error_response(err)
 
 
 async def get_matchhistory_by_champion(account_id, championId):
@@ -61,12 +61,12 @@ async def get_matchhistory_by_champion(account_id, championId):
     wait_time = 0
     response = ResType.NULL
     try:
-        data = await api_static_data.lol_watcher.match.matchlist_by_account(
+        data = api_static_data.lol_watcher.match.matchlist_by_account(
             region=api_static_data.my_region, encrypted_account_id=account_id, champion=championId)
         response = ResType.SUCCESS
         return ApiResponse(data, wait_time, response)
     except ApiError as err:
-        return await get_error_response(err)
+        return get_error_response(err)
 
 
 async def get_rank_with_summonerid(summoner_id):
@@ -74,7 +74,7 @@ async def get_rank_with_summonerid(summoner_id):
     wait_time = 0
     response = ResType.NULL
     try:
-        data = await api_static_data.lol_watcher.league.by_summoner(
+        data = api_static_data.lol_watcher.league.by_summoner(
             api_static_data.my_region, summoner_id)
         for x in data:
             if x['queueType'] == 'RANKED_SOLO_5x5':
@@ -82,10 +82,10 @@ async def get_rank_with_summonerid(summoner_id):
                 response = ResType.SUCCESS
                 return ApiResponse(chosen_data['tier'] + " " + chosen_data['rank'], wait_time, response)
     except ApiError as err:
-        return await get_error_response(err)
+        return get_error_response(err)
 
 
-async def get_error_response(error):
+def get_error_response(error):
     if error.response.status_code == 429:  # too many requests
         wait_time = error.response.headers['Retry-After']
         response = ResType.WAIT

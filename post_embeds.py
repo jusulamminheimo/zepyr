@@ -67,7 +67,7 @@ async def update_embeds(posted_embeds, embed_list, player_list):
         else:
             rank = player_list[x]._rank
 
-        winRatioString = "WR "+str(get_win_ratio.get_win_ratio(
+        winRatioString = "WR "+str( await get_win_ratio.get_win_ratio(
             player_list[x]._username, player_list[x]._championId, api_static_data.lol_watcher))
         if 'None' in winRatioString:
             wrString = 'No games'
