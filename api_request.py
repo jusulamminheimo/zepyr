@@ -13,8 +13,8 @@ async def get_player_by_summonername(summoner_name: str):
     try:
         data = api_static_data.lol_watcher.summoner.by_name(
             api_static_data.my_region, summoner_name)
-        await dlogger.log_multi(body_to_json_string(response._name_,data))
         response = ResType.SUCCESS
+        await dlogger.log_multi(body_to_json_string(response._name_,data))
         return ApiResponse(data, wait_time, response)
     except ApiError as err:
         error_response = get_error_response(err)
@@ -42,12 +42,10 @@ async def get_live_match_by_summoner_id(summoner_id: str):
 async def get_match_by_match_id(match_id: str):
     wait_time = 0
     response = ResType.NULL
-    await dlogger.log(f"get_match_by_match_id {match_id}")
     try:
         data = api_static_data.lol_watcher.match.by_id(
             api_static_data.my_region, match_id=match_id)
         response = ResType.SUCCESS
-        await dlogger.log(f"{response._name_}")
         return ApiResponse(data, wait_time, response)
     except ApiError as err:
         error_response = get_error_response(err)

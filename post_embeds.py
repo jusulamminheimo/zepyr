@@ -120,13 +120,15 @@ async def make_embeds(message, player_list):
             get_rank_icon(player_list[x]._rank)))
         embed_list.append(newEmbed)
 
-    print("embeds created")
+    await dlogger.log(f"embeds created")
 
     posted_embeds = await post_embeds(message, embed_list)
 
-    print("embeds posted")
+    await dlogger.log(f"embeds posted")
 
     await update_embeds(posted_embeds, embed_list, player_list)
+
+    await dlogger.log(f"embeds updated with winratios")
 
 async def set_teams(summoner_name):
     summoner = await api.get_player_by_summonername(summoner_name)
