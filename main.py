@@ -7,6 +7,7 @@ import asyncio
 import api_request as api
 import traceback
 import datetime
+import discord_logger as dlogger
 
 
 lol_watcher = api_static_data.lol_watcher
@@ -29,12 +30,14 @@ class MyClient(discord.Client):
                 await post_embeds.make_embeds(message, player_list.data)
             elif(player_list.response == api.ResType.NODATA):
                 await message.channel.send("Match not found")
+            elif(player_list.response == api.ResType.DENIED):
+                await message.channel.send("API KEY EXPIRED")
 
         elif message.content.startswith("!rank"):
             checkRankName = message.content[6:]
-            summoner = api.get_summoner_by_summonername(checkRankName)
+            summoner = await api.get_summoner_by_summonername(checkRankName)
             if(summoner.response == api.ResType.SUCCESS):
-                rank = api.get_rank_with_summonerid(summoner.data['id'])
+                rank = await api.get_rank_with_summonerid(summoner.data['id'])
                 if(rank.response == api.ResType.SUCCESS):
                     await message.channel.send(rank.data)
 
@@ -48,6 +51,7 @@ class MyClient(discord.Client):
 
 
 client = MyClient()
+dlogger.client = client
 loop = asyncio.get_event_loop()
 loop.run_until_complete(client.start(
     api_static_data.discord_bot_token))
