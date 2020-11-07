@@ -1,12 +1,15 @@
+import asyncio
 from logging import error
 from discord import player
 from riotwatcher import LolWatcher, ApiError
 import discord
+from api_request import ResType
 import get_win_ratio
 import api_static_data
 import time
 import get_summoner
 import api_request as api
+import discord_logger as dlogger
 
 
 baseUrl = "https://static.wikia.nocookie.net/leagueoflegends/images/"
@@ -65,7 +68,7 @@ async def update_embeds(posted_embeds, embed_list, player_list):
         else:
             rank = player_list[x]._rank
 
-        winRatioString = "WR "+str(get_win_ratio.get_win_ratio(
+        winRatioString = "WR "+str( await get_win_ratio.get_win_ratio(
             player_list[x]._username, player_list[x]._championId, api_static_data.lol_watcher))
         if 'None' in winRatioString:
             wrString = 'No games'
@@ -117,25 +120,27 @@ async def make_embeds(message, player_list):
             get_rank_icon(player_list[x]._rank)))
         embed_list.append(newEmbed)
 
-    print("embeds created")
+    await dlogger.log(f"embeds created")
 
     posted_embeds = await post_embeds(message, embed_list)
 
-    print("embeds posted")
+    await dlogger.log(f"embeds posted")
 
     await update_embeds(posted_embeds, embed_list, player_list)
 
+    await dlogger.log(f"embeds updated with winratios")
+
 async def set_teams(summoner_name):
-    summoner = api.get_player_by_summonername(summoner_name)
+    summoner = await api.get_player_by_summonername(summoner_name)
     if summoner.response == api.ResType.WAIT:
-        time.sleep(summoner.wait_time)
-        summoner = api.get_player_by_summonername(summoner_name)
+        asyncio.sleep(summoner.wait_time)
+        summoner = await api.get_player_by_summonername(summoner_name)
 
     if(summoner.response == api.ResType.SUCCESS):
-        match = api.get_live_match_by_summoner_id(summoner.data['id'])
+        match = await api.get_live_match_by_summoner_id(summoner.data['id'])
         if match.response == api.ResType.WAIT:
-            time.sleep(match.wait_time)
-            match = api.get_live_match_by_summoner_id(summoner.data['id'])
+            asyncio.sleep(match.wait_time)
+            match = await api.get_live_match_by_summoner_id(summoner.data['id'])
 
         elif(match.response == api.ResType.SUCCESS):
             participant_list = match.data['participants']
@@ -145,7 +150,7 @@ async def set_teams(summoner_name):
                               'summonerId': players['summonerId'], 'championId': players['championId']}
                 player = get_summoner.get_player_object(playerTemp)
                 player_list.append(player)
-
+            print(player_list)
             match.data = player_list
             return match
 
@@ -153,4 +158,7 @@ async def set_teams(summoner_name):
             return match
 
     elif(summoner.response == api.ResType.NODATA):
+        return summoner
+
+    elif(summoner.response == api.ResType.DENIED):
         return summoner
