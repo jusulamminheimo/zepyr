@@ -109,7 +109,7 @@ async def make_embeds(message, player_list):
 
         nameWithChamp = player_list[x]._champion+" - "+name
 
-        if 'None' in player_list[x]._rank:
+        if player_list[x]._rank is None:
             rank = "UNRANKED"
         else:
             rank = player_list[x]._rank
