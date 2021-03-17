@@ -8,7 +8,7 @@ import api_request as api
 import traceback
 import datetime
 import discord_logger as dlogger
-
+import sys
 
 lol_watcher = config_file.lol_watcher
 
@@ -48,6 +48,7 @@ class MyClient(discord.Client):
         embed.timestamp = datetime.datetime.utcnow()
         channel = client.get_channel(config_file.log_channel_id)
         await channel.send(embed=embed)
+        sys.stdout.flush()
 
 
 client = MyClient()
