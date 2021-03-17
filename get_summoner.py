@@ -1,5 +1,6 @@
-import api_static_data
+import config_file
 from riotwatcher import ApiError
+
 
 class Player(object):
     def __init__(self, champion, username, rank, champion_id, user_id):
@@ -15,6 +16,7 @@ class Player(object):
     def __str__(self):
         return str(self._username)
 
+
 def get_player_object(playerDic):
     return Player(
         champion=get_champion_by_championid(str(playerDic['championId'])),
@@ -25,15 +27,15 @@ def get_player_object(playerDic):
 
 
 def get_champion_by_championid(champion_id):
-    for x, y in api_static_data.static_champ_list['data'].items():
+    for x, y in config_file.static_champ_list['data'].items():
         if(y.get('key') == champion_id):
             return(x)
 
 
 def get_rank_by_summonerid(summoner_id):
     try:
-        league_data = api_static_data.lol_watcher.league.by_summoner(
-            api_static_data.my_region, summoner_id)
+        league_data = config_file.lol_watcher.league.by_summoner(
+            config_file.my_region, summoner_id)
         for x in league_data:
             if x['queueType'] == 'RANKED_SOLO_5x5':
                 chosen_data = x
@@ -49,10 +51,10 @@ def get_rank_by_summonerid(summoner_id):
 
 def get_rank_by_summonername(summoner_name):
     try:
-        response = api_static_data.lol_watcher.summoner.by_name(
-            api_static_data.my_region, summoner_name)
-        league_data = api_static_data.lol_watcher.league.by_summoner(
-            api_static_data.my_region, response['id'])
+        response = config_file.lol_watcher.summoner.by_name(
+            config_file.my_region, summoner_name)
+        league_data = config_file.lol_watcher.league.by_summoner(
+            config_file.my_region, response['id'])
         for x in league_data:
             if x['queueType'] == 'RANKED_SOLO_5x5':
                 chosen_data = x
