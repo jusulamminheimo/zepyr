@@ -1,7 +1,7 @@
 from enum import IntEnum
 import datetime
 import discord
-import config_file as asd
+import zepyr_config as asd
 
 client: discord.Client
 

@@ -1,10 +1,10 @@
 from enum import Enum
 from riotwatcher import LolWatcher, ApiError
-import config_file
+import zepyr_config
 import discord_logger as dlogger
 import json
 
-api_key = config_file.riot_api_key
+api_key = zepyr_config.riot_api_key
 
 
 async def get_player_by_summonername(summoner_name: str):
@@ -12,8 +12,8 @@ async def get_player_by_summonername(summoner_name: str):
     response = ResType.NULL
     await dlogger.log(f"get_player_by_summonername {summoner_name}")
     try:
-        data = config_file.lol_watcher.summoner.by_name(
-            config_file.my_region, summoner_name)
+        data = zepyr_config.lol_watcher.summoner.by_name(
+            zepyr_config.my_region, summoner_name)
         response = ResType.SUCCESS
         await dlogger.log_multi(body_to_json_string(response._name_, data))
         return ApiResponse(data, wait_time, response)
@@ -29,8 +29,8 @@ async def get_live_match_by_summoner_id(summoner_id: str):
     response = ResType.NULL
     await dlogger.log(f"get_live_match_by_summoner_id {summoner_id}")
     try:
-        data = config_file.lol_watcher.spectator.by_summoner(
-            config_file.my_region, summoner_id)
+        data = zepyr_config.lol_watcher.spectator.by_summoner(
+            zepyr_config.my_region, summoner_id)
         response = ResType.SUCCESS
         await dlogger.log(f"{response._name_}")
         return ApiResponse(data, wait_time, response)
@@ -44,8 +44,8 @@ async def get_match_by_match_id(match_id: str):
     wait_time = 0
     response = ResType.NULL
     try:
-        data = config_file.lol_watcher.match.by_id(
-            config_file.my_region, match_id=match_id)
+        data = zepyr_config.lol_watcher.match.by_id(
+            zepyr_config.my_region, match_id=match_id)
         response = ResType.SUCCESS
         return ApiResponse(data, wait_time, response)
     except ApiError as err:
@@ -59,8 +59,8 @@ async def get_summoner_by_summonername(summonerName):
     response = ResType.NULL
     await dlogger.log(f"get_summoner_by_summonername {summonerName}")
     try:
-        data = config_file.lol_watcher.summoner.by_name(
-            config_file.my_region, summonerName)
+        data = zepyr_config.lol_watcher.summoner.by_name(
+            zepyr_config.my_region, summonerName)
         response = ResType.SUCCESS
         await dlogger.log_multi(body_to_json_string(response._name_, data))
         return ApiResponse(data, wait_time, response)
@@ -76,8 +76,8 @@ async def get_matchhistory_by_champion(account_id, championId):
     response = ResType.NULL
     await dlogger.log(f"get_matchhistory_by_champion {championId} from account {account_id}")
     try:
-        data = config_file.lol_watcher.match.matchlist_by_account(
-            region=config_file.my_region, encrypted_account_id=account_id, champion=championId)
+        data = zepyr_config.lol_watcher.match.matchlist_by_account(
+            region=zepyr_config.my_region, encrypted_account_id=account_id, champion=championId)
         response = ResType.SUCCESS
         await dlogger.log(f"{response._name_}")
         return ApiResponse(data, wait_time, response)
@@ -93,8 +93,8 @@ async def get_rank_with_summonerid(summoner_id):
     response = ResType.NULL
     await dlogger.log(f"get_rank_with_summonerid {summoner_id}")
     try:
-        data = config_file.lol_watcher.league.by_summoner(
-            config_file.my_region, summoner_id)
+        data = zepyr_config.lol_watcher.league.by_summoner(
+            zepyr_config.my_region, summoner_id)
         for x in data:
             if x['queueType'] == 'RANKED_SOLO_5x5':
                 chosen_data = x

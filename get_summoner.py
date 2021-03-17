@@ -1,4 +1,4 @@
-import config_file
+import zepyr_config
 from riotwatcher import ApiError
 
 
@@ -27,15 +27,15 @@ def get_player_object(playerDic):
 
 
 def get_champion_by_championid(champion_id):
-    for x, y in config_file.static_champ_list['data'].items():
+    for x, y in zepyr_config.static_champ_list['data'].items():
         if(y.get('key') == champion_id):
             return(x)
 
 
 def get_rank_by_summonerid(summoner_id):
     try:
-        league_data = config_file.lol_watcher.league.by_summoner(
-            config_file.my_region, summoner_id)
+        league_data = zepyr_config.lol_watcher.league.by_summoner(
+            zepyr_config.my_region, summoner_id)
         for x in league_data:
             if x['queueType'] == 'RANKED_SOLO_5x5':
                 chosen_data = x
@@ -51,10 +51,10 @@ def get_rank_by_summonerid(summoner_id):
 
 def get_rank_by_summonername(summoner_name):
     try:
-        response = config_file.lol_watcher.summoner.by_name(
-            config_file.my_region, summoner_name)
-        league_data = config_file.lol_watcher.league.by_summoner(
-            config_file.my_region, response['id'])
+        response = zepyr_config.lol_watcher.summoner.by_name(
+            zepyr_config.my_region, summoner_name)
+        league_data = zepyr_config.lol_watcher.league.by_summoner(
+            zepyr_config.my_region, response['id'])
         for x in league_data:
             if x['queueType'] == 'RANKED_SOLO_5x5':
                 chosen_data = x
