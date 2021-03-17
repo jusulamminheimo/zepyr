@@ -1,3 +1,4 @@
 riotwatcher
 discord
 requests
+dotenv
