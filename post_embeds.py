@@ -5,7 +5,7 @@ from riotwatcher import LolWatcher, ApiError
 import discord
 from api_request import ResType
 import get_win_ratio
-import config_file
+import zepyr_config
 import time
 import get_summoner
 import api_request as api
@@ -69,13 +69,13 @@ async def update_embeds(posted_embeds, embed_list, player_list):
             rank = player_list[x]._rank
 
         winRatioString = "WR "+str(await get_win_ratio.get_win_ratio(
-            player_list[x]._username, player_list[x]._championId, config_file.lol_watcher))
+            player_list[x]._username, player_list[x]._championId, zepyr_config.lol_watcher))
         if 'None' in winRatioString:
             wrString = 'No games'
         else:
             wrString = winRatioString
         newEmbed.set_author(name=nameWithChamp, url=linkToOpGG,  icon_url=str(
-            "http://ddragon.leagueoflegends.com/cdn/" + config_file.latest + "/img/champion/" + player_list[x]._champion + ".png"))
+            "http://ddragon.leagueoflegends.com/cdn/" + zepyr_config.latest + "/img/champion/" + player_list[x]._champion + ".png"))
         newEmbed.set_footer(text=rank+" ("+str(wrString)+")", icon_url=str(
             get_rank_icon(player_list[x]._rank)))
         embed_list.append(newEmbed)
@@ -115,7 +115,7 @@ async def make_embeds(message, player_list):
             rank = player_list[x]._rank
 
         newEmbed.set_author(name=nameWithChamp, url=linkToOpGG,  icon_url=str(
-            "http://ddragon.leagueoflegends.com/cdn/" + config_file.latest + "/img/champion/" + player_list[x]._champion + ".png"))
+            "http://ddragon.leagueoflegends.com/cdn/" + zepyr_config.latest + "/img/champion/" + player_list[x]._champion + ".png"))
         newEmbed.set_footer(text=rank, icon_url=str(
             get_rank_icon(player_list[x]._rank)))
         embed_list.append(newEmbed)

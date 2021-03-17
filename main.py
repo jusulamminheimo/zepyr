@@ -1,6 +1,6 @@
 from riotwatcher import ApiError
 import discord
-import config_file
+import zepyr_config
 import post_embeds
 import get_summoner
 import asyncio
@@ -8,17 +8,17 @@ import api_request as api
 import traceback
 import datetime
 import discord_logger as dlogger
-import sys
 
-lol_watcher = config_file.lol_watcher
 
-api_key = config_file.riot_api_key
+lol_watcher = zepyr_config.lol_watcher
+
+api_key = zepyr_config.riot_api_key
 
 
 class MyClient(discord.Client):
     async def on_ready(self):
         print('Logged on as {0}!'.format(self.user))
-        channel = client.get_channel(config_file.log_channel_id)
+        channel = client.get_channel(zepyr_config.log_channel_id)
         await channel.send("Bot online")
 
     async def on_message(self, message):
@@ -46,13 +46,12 @@ class MyClient(discord.Client):
         embed.add_field(name='Event', value=event)
         embed.description = '```py\n%s\n```' % traceback.format_exc()
         embed.timestamp = datetime.datetime.utcnow()
-        channel = client.get_channel(config_file.log_channel_id)
+        channel = client.get_channel(zepyr_config.log_channel_id)
         await channel.send(embed=embed)
-        sys.stdout.flush()
 
 
 client = MyClient()
 dlogger.client = client
 loop = asyncio.get_event_loop()
 loop.run_until_complete(client.start(
-    config_file.discord_bot_token))
+    zepyr_config.discord_bot_token))
