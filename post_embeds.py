@@ -63,7 +63,7 @@ async def update_embeds(posted_embeds, embed_list, player_list):
         else:
             newEmbed.color = 0x085eff
 
-        if 'None' in player_list[x]._rank:
+        if player_list[x]._rank is None:
             rank = "UNRANKED"
         else:
             rank = player_list[x]._rank
