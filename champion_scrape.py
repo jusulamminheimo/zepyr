@@ -16,10 +16,13 @@ options.add_argument('--disable-dev-shm-usage')
 options.binary_location = GOOGLE_CHROME_PATH
 
 
-def get_runes_by_champion_name(champion_name):
+def get_runes_by_champion_name(champion_name, is_aram):
     driver = webdriver.Chrome(
         options=options, executable_path=CHROMEDRIVER_PATH)
-    url = f"https://u.gg/lol/champions/{champion_name}/build"
+    if(is_aram):
+        url = f"https://u.gg/lol/champions/aram/{champion_name}-aram"
+    else:
+        url = f"https://u.gg/lol/champions/{champion_name}/build"
     driver.get(url)
     WebDriverWait(driver, 20).until(
         EC.frame_to_be_available_and_switch_to_it((By.ID, "sp_message_iframe_403856")))
