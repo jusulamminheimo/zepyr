@@ -44,7 +44,8 @@ class MyClient(discord.Client):
 
         elif message.content.startswith("!runes"):
             championName = message.content[7:]
-            champion_scrape.get_runes_by_champion_name(championName)
+            is_aram = '--aram' in message.content
+            champion_scrape.get_runes_by_champion_name(championName, is_aram)
             await message.channel.send(file=discord.File('test_screen.png'))
 
     async def on_error(event, *args, **kwargs):
