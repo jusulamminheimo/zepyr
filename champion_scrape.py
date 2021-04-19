@@ -4,15 +4,15 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 import time
+import os
 
-GOOGLE_CHROME_PATH = '/app/.apt/usr/bin/google_chrome'
-CHROMEDRIVER_PATH = '/app/.chromedriver/bin/chromedriver'
+GOOGLE_CHROME_PATH = os.getenv('GOOGLE_CHROME_BIN')
+CHROMEDRIVER_PATH = os.getenv('CHROMEDRIVER_PATH')
 
-options = Options()
+options = webdriver.ChromeOptions()
 options.headless = True
 options.add_argument("--window-size=1920,1200")
-options.add_argument("--disable-gpu")
-options.add_argument("--no-sandbox")
+options.add_argument("--disable-dev-shm-usage")
 options.binary_location = GOOGLE_CHROME_PATH
 
 
