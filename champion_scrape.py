@@ -31,6 +31,11 @@ def get_runes_by_champion_name(champion_name, is_aram):
     button.click()
 
     driver.switch_to.default_content()
+
+    items = driver.find_element_by_xpath(
+        '//*[@id="content"]/div/div[1]/div/div/div[5]/div/div[6]')
+    items.screenshot("items.png")
+
     runes = driver.find_element_by_xpath(
         '//*[@id="content"]/div/div[1]/div/div/div[5]/div/div[2]/div[1]')
     runes.screenshot("runes.png")
@@ -38,9 +43,5 @@ def get_runes_by_champion_name(champion_name, is_aram):
     abilities = driver.find_element_by_xpath(
         '//*[@id="content"]/div/div[1]/div/div/div[5]/div/div[3]/div[1]')
     abilities.screenshot("abilities.png")
-
-    items = driver.find_element_by_xpath(
-        '//*[@id="content"]/div/div[1]/div/div/div[5]/div/div[6]')
-    items.screenshot("items.png")
 
     driver.quit()
