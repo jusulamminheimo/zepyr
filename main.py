@@ -45,10 +45,14 @@ class MyClient(discord.Client):
         elif message.content.startswith("!runes"):
             championName = message.content[7:]
             is_aram = '--aram' in message.content
+            has_build = '--build' in message.content
             champion_scrape.get_runes_by_champion_name(championName, is_aram)
             await message.channel.send(file=discord.File('runes.png'))
-            await message.channel.send(file=discord.File('items.png'))
-            await message.channel.send(file=discord.File('abilities.png'))
+            if(has_build):
+                champion_scrape.get_build_by_champion_name(
+                    championName, is_aram)
+                await message.channel.send(file=discord.File('abilities.png'))
+                await message.channel.send(file=discord.File('items.png'))
 
     async def on_error(event, *args, **kwargs):
         embed = discord.Embed(title=':x: Event Error', colour=0xe74c3c)
