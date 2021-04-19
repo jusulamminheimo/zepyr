@@ -2,3 +2,4 @@ riotwatcher
 discord
 requests
 python-dotenv
+selenium
