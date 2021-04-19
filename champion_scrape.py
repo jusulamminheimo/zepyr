@@ -10,9 +10,6 @@ GOOGLE_CHROME_PATH = os.getenv('GOOGLE_CHROME_BIN')
 CHROMEDRIVER_PATH = os.getenv('CHROMEDRIVER_PATH')
 
 options = webdriver.ChromeOptions()
-options.headless = True
-options.add_argument("--window-size=1920,1200")
-options.add_argument("--disable-dev-shm-usage")
 options.binary_location = GOOGLE_CHROME_PATH
 
 
