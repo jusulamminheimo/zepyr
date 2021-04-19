@@ -29,8 +29,18 @@ def get_runes_by_champion_name(champion_name, is_aram):
     button = WebDriverWait(driver, 5).until(EC.element_to_be_clickable(
         (By.XPATH, '/html/body/div/div[2]/div[5]/button[2]')))
     button.click()
+
     driver.switch_to.default_content()
     runes = driver.find_element_by_xpath(
         '//*[@id="content"]/div/div[1]/div/div/div[5]/div/div[2]/div[1]')
-    runes.screenshot("test_screen.png")
+    runes.screenshot("runes.png")
+
+    abilities = driver.find_element_by_xpath(
+        '//*[@id="content"]/div/div[1]/div/div/div[5]/div/div[3]/div[1]')
+    abilities.screenshot("abilities.png")
+
+    items = driver.find_element_by_xpath(
+        '//*[@id="content"]/div/div[1]/div/div/div[5]/div/div[6]')
+    items.screenshot("items.png")
+
     driver.quit()
