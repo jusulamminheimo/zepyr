@@ -8,6 +8,7 @@ import api_request as api
 import traceback
 import datetime
 import discord_logger as dlogger
+import champion_scrape
 
 
 lol_watcher = zepyr_config.lol_watcher
@@ -40,6 +41,11 @@ class MyClient(discord.Client):
                 rank = await api.get_rank_with_summonerid(summoner.data['id'])
                 if(rank.response == api.ResType.SUCCESS):
                     await message.channel.send(rank.data)
+
+        elif message.content.startswith("!runes"):
+            championName = message.content[7:]
+            champion_scrape.get_runes_by_champion_name(championName)
+            await message.channel.send(file=discord.File('test_screen.png'))
 
     async def on_error(event, *args, **kwargs):
         embed = discord.Embed(title=':x: Event Error', colour=0xe74c3c)
