@@ -46,7 +46,7 @@ class MyClient(discord.Client):
             championName = message.content[7:]
             is_aram = '--aram' in message.content
             has_build = '--build' in message.content
-            has_lane = '-lane' in message.content
+            has_lane = '-role' in message.content
             champion_scrape.get_runes_by_champion_name(
                 championName, is_aram, has_lane, message)
             await message.channel.send(file=discord.File('runes.png'))

@@ -72,7 +72,7 @@ def get_build_by_champion_name(champion_name, is_aram, has_lane, messagecontent)
 
 
 def get_lane_string(message):
-    lane = message.content.partition("-lane")[2]
+    lane = message.content.partition("-role")[2]
     if(lane.startswith('j')):
         lane = "?role=jungle"
     elif(lane.startswith('a')):
