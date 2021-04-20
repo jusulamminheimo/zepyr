@@ -17,27 +17,21 @@ options.add_argument('window-size=1920x1080')
 options.binary_location = GOOGLE_CHROME_PATH
 
 
-def get_url(is_aram, champion_name):
+def get_url(is_aram, champion_name, role):
     if(is_aram):
         return f"https://u.gg/lol/champions/aram/{champion_name}-aram"
+    if(len(role) >= 1):
+        return f"https://u.gg/lol/champions/{champion_name}/build?role={role}"
     else:
         return f"https://u.gg/lol/champions/{champion_name}/build"
 
 
-def get_runes_by_champion_name(champion_name, is_aram):
+def get_runes_by_champion_name(champion_name, is_aram, role):
     runes_container_xpath = '//*[@id="content"]/div/div[1]/div/div/div[5]/div/div[2]/div[1]'
-
     driver = webdriver.Chrome(
         options=options, executable_path=CHROMEDRIVER_PATH)
 
-    driver.get(get_url(is_aram, champion_name))
-
-    WebDriverWait(driver, 20).until(
-        EC.frame_to_be_available_and_switch_to_it((By.ID, "sp_message_iframe_403856")))
-    button = WebDriverWait(driver, 5).until(EC.element_to_be_clickable(
-        (By.XPATH, '/html/body/div/div[2]/div[5]/button[2]')))
-    button.click()
-    driver.switch_to.default_content()
+    setup_championgg_page(driver, is_aram, champion_name, role)
 
     runes = driver.find_element_by_xpath(
         runes_container_xpath)
@@ -46,7 +40,7 @@ def get_runes_by_champion_name(champion_name, is_aram):
     driver.quit()
 
 
-def get_build_by_champion_name(champion_name, is_aram):
+def get_build_by_champion_name(champion_name, is_aram, role):
     if(is_aram):
         ability_container_xpath = '//*[@id="content"]/div/div[1]/div/div/div[5]/div/div[3]/div[1]'
         item_container_xpath = '//*[@id="content"]/div/div[1]/div/div/div[5]/div/div[6]'
@@ -56,13 +50,8 @@ def get_build_by_champion_name(champion_name, is_aram):
 
     driver = webdriver.Chrome(
         options=options, executable_path=CHROMEDRIVER_PATH)
-    driver.get(get_url(is_aram, champion_name))
-    WebDriverWait(driver, 20).until(
-        EC.frame_to_be_available_and_switch_to_it((By.ID, "sp_message_iframe_403856")))
-    button = WebDriverWait(driver, 5).until(EC.element_to_be_clickable(
-        (By.XPATH, '/html/body/div/div[2]/div[5]/button[2]')))
-    button.click()
-    driver.switch_to.default_content()
+
+    setup_championgg_page(driver, is_aram, champion_name, role)
 
     abilities = driver.find_element_by_xpath(
         ability_container_xpath)
@@ -73,3 +62,13 @@ def get_build_by_champion_name(champion_name, is_aram):
     items.screenshot("items.png")
 
     driver.quit()
+
+
+def setup_championgg_page(driver, is_aram, champion_name, role):
+    driver.get(get_url(is_aram, champion_name, role))
+    WebDriverWait(driver, 20).until(
+        EC.frame_to_be_available_and_switch_to_it((By.ID, "sp_message_iframe_403856")))
+    button = WebDriverWait(driver, 5).until(EC.element_to_be_clickable(
+        (By.XPATH, '/html/body/div/div[2]/div[5]/button[2]')))
+    button.click()
+    driver.switch_to.default_content()

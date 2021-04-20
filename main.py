@@ -9,6 +9,7 @@ import traceback
 import datetime
 import discord_logger as dlogger
 import champion_scrape
+import aliases
 
 
 lol_watcher = zepyr_config.lol_watcher
@@ -43,16 +44,22 @@ class MyClient(discord.Client):
                     await message.channel.send(rank.data)
 
         elif message.content.startswith("!runes"):
-            championName = message.content[7:].rsplit(' ')[0].strip()
-            print(championName)
+            splitmessage = message.content[7:].rsplit(' ')
+            championName = aliases.get_champion_alias(splitmessage[0].strip())
+            roleName = splitmessage[-1].strip()
             is_aram = '--aram' in message.content
             has_build = '--build' in message.content
+            has_role = '-role' in message.content
+            role_for_url = ""
+            if(has_role):
+                role_for_url = aliases.get_role_string(roleName)
             champion_scrape.get_runes_by_champion_name(
-                championName, is_aram)
+                championName, is_aram, role_for_url)
             await message.channel.send(file=discord.File('runes.png'))
+
             if(has_build):
                 champion_scrape.get_build_by_champion_name(
-                    championName, is_aram)
+                    championName, is_aram, role_for_url)
                 await message.channel.send(file=discord.File('abilities.png'))
                 await message.channel.send(file=discord.File('items.png'))
 
