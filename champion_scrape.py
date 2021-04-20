@@ -17,13 +17,13 @@ options.add_argument('window-size=1920x1080')
 options.binary_location = GOOGLE_CHROME_PATH
 
 
-def get_runes_by_champion_name(champion_name, is_aram, has_lane):
+def get_runes_by_champion_name(champion_name, is_aram, has_lane, messagecontent):
     driver = webdriver.Chrome(
         options=options, executable_path=CHROMEDRIVER_PATH)
     if(is_aram):
         url = f"https://u.gg/lol/champions/aram/{champion_name}-aram"
     if(has_lane):
-        url = f"https://u.gg/lol/champions/{champion_name}/build{get_lane_string}"
+        url = f"https://u.gg/lol/champions/{champion_name}/build{get_lane_string(messagecontent)}"
     else:
         url = f"https://u.gg/lol/champions/{champion_name}/build"
     driver.get(url)
@@ -42,13 +42,13 @@ def get_runes_by_champion_name(champion_name, is_aram, has_lane):
     driver.quit()
 
 
-def get_build_by_champion_name(champion_name, is_aram, has_lane):
+def get_build_by_champion_name(champion_name, is_aram, has_lane, messagecontent):
     driver = webdriver.Chrome(
         options=options, executable_path=CHROMEDRIVER_PATH)
     if(is_aram):
         url = f"https://u.gg/lol/champions/aram/{champion_name}-aram"
     if(has_lane):
-        url = f"https://u.gg/lol/champions/{champion_name}/build{get_lane_string}"
+        url = f"https://u.gg/lol/champions/{champion_name}/build{get_lane_string(messagecontent)}"
     else:
         url = f"https://u.gg/lol/champions/{champion_name}/build"
     driver.get(url)
