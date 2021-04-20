@@ -17,15 +17,16 @@ options.add_argument('window-size=1920x1080')
 options.binary_location = GOOGLE_CHROME_PATH
 
 
-def get_runes_by_champion_name(champion_name, is_aram, has_lane, messagecontent):
+def get_runes_by_champion_name(champion_name, is_aram, has_role, messagecontent):
     driver = webdriver.Chrome(
         options=options, executable_path=CHROMEDRIVER_PATH)
     if(is_aram):
         url = f"https://u.gg/lol/champions/aram/{champion_name}-aram"
-    if(has_lane):
+    if(has_role):
         url = f"https://u.gg/lol/champions/{champion_name}/build{get_lane_string(messagecontent)}"
     else:
         url = f"https://u.gg/lol/champions/{champion_name}/build"
+    print(url)
     driver.get(url)
     WebDriverWait(driver, 20).until(
         EC.frame_to_be_available_and_switch_to_it((By.ID, "sp_message_iframe_403856")))
@@ -42,15 +43,23 @@ def get_runes_by_champion_name(champion_name, is_aram, has_lane, messagecontent)
     driver.quit()
 
 
-def get_build_by_champion_name(champion_name, is_aram, has_lane, messagecontent):
+def get_build_by_champion_name(champion_name, is_aram, has_role, messagecontent):
+    if(is_aram):
+        ability_container_xpath = '//*[@id="content"]/div/div[1]/div/div/div[5]/div/div[3]/div[1]'
+        item_container_xpath = '//*[@id="content"]/div/div[1]/div/div/div[5]/div/div[6]'
+    else:
+        ability_container_xpath = '//*[@id="content"]/div/div[1]/div/div/div[5]/div/div[4]/div[1]'
+        item_container_xpath = '//*[@id="content"]/div/div[1]/div/div/div[5]/div/div[7]'
+
     driver = webdriver.Chrome(
         options=options, executable_path=CHROMEDRIVER_PATH)
     if(is_aram):
         url = f"https://u.gg/lol/champions/aram/{champion_name}-aram"
-    if(has_lane):
+    if(has_role):
         url = f"https://u.gg/lol/champions/{champion_name}/build{get_lane_string(messagecontent)}"
     else:
         url = f"https://u.gg/lol/champions/{champion_name}/build"
+    print(url)
     driver.get(url)
     WebDriverWait(driver, 20).until(
         EC.frame_to_be_available_and_switch_to_it((By.ID, "sp_message_iframe_403856")))
@@ -61,18 +70,19 @@ def get_build_by_champion_name(champion_name, is_aram, has_lane, messagecontent)
     driver.switch_to.default_content()
 
     abilities = driver.find_element_by_xpath(
-        '//*[@id="content"]/div/div[1]/div/div/div[5]/div/div[3]/div[1]')
+        ability_container_xpath)
     abilities.screenshot("abilities.png")
 
     items = driver.find_element_by_xpath(
-        '//*[@id="content"]/div/div[1]/div/div/div[5]/div/div[6]')
+        item_container_xpath)
     items.screenshot("items.png")
 
     driver.quit()
 
 
 def get_lane_string(message):
-    lane = message.content.partition("-role")[2]
+    lane = message.content.partition("-role")[2].strip()
+    print(lane)
     if(lane.startswith('j')):
         lane = "?role=jungle"
     elif(lane.startswith('a')):

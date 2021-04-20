@@ -43,16 +43,17 @@ class MyClient(discord.Client):
                     await message.channel.send(rank.data)
 
         elif message.content.startswith("!runes"):
-            championName = message.content[7:]
+            championName = message.content[7:].rsplit(' ', 2)[0]
+            print(championName)
             is_aram = '--aram' in message.content
             has_build = '--build' in message.content
-            has_lane = '-role' in message.content
+            has_role = '-role' in message.content
             champion_scrape.get_runes_by_champion_name(
-                championName, is_aram, has_lane, message)
+                championName, is_aram, has_role, message)
             await message.channel.send(file=discord.File('runes.png'))
             if(has_build):
                 champion_scrape.get_build_by_champion_name(
-                    championName, is_aram, has_lane, message)
+                    championName, is_aram, has_role, message)
                 await message.channel.send(file=discord.File('abilities.png'))
                 await message.channel.send(file=discord.File('items.png'))
 
