@@ -4,6 +4,7 @@ import api_request as api
 import asyncio
 import discord_logger as dlogger
 
+
 async def get_win_ratio(summoner_name: str, champion_id: str, lolWatcher: LolWatcher):
     await dlogger.log(f"calculating winratio for {summoner_name}")
     summoner = await api.get_summoner_by_summonername(summoner_name)
