@@ -48,11 +48,11 @@ class MyClient(discord.Client):
             has_build = '--build' in message.content
             has_lane = '-lane' in message.content
             champion_scrape.get_runes_by_champion_name(
-                championName, is_aram, has_lane)
+                championName, is_aram, has_lane, message.content)
             await message.channel.send(file=discord.File('runes.png'))
             if(has_build):
                 champion_scrape.get_build_by_champion_name(
-                    championName, is_aram, has_lane)
+                    championName, is_aram, has_lane, message.content)
                 await message.channel.send(file=discord.File('abilities.png'))
                 await message.channel.send(file=discord.File('items.png'))
 
