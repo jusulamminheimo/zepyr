@@ -46,7 +46,7 @@ def get_url(role):
 def setup_ugg_page(driver, role):
     driver.get(get_url(role))
     WebDriverWait(driver, 20).until(
-        EC.frame_to_be_available_and_switch_to_it((By.ID, "sp_message_iframe_403856")))
+        EC.frame_to_be_available_and_switch_to_it((By.ID, "541053")))
     button = WebDriverWait(driver, 5).until(EC.element_to_be_clickable(
         (By.XPATH, '/html/body/div/div[2]/div[5]/button[2]')))
     button.click()
