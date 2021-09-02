@@ -10,6 +10,7 @@ import datetime
 import discord_logger as dlogger
 import champion_scrape
 import aliases
+import get_top
 
 
 lol_watcher = zepyr_config.lol_watcher
@@ -40,8 +41,10 @@ class MyClient(discord.Client):
             summoner = await api.get_summoner_by_summonername(checkRankName)
             if(summoner.response == api.ResType.SUCCESS):
                 rank = await api.get_rank_with_summonerid(summoner.data['id'])
-                if(rank.response == api.ResType.SUCCESS):
+                if(rank is not None):
                     await message.channel.send(rank.data)
+                else:
+                    await message.channel.send("No rank")
 
         elif message.content.startswith("!runes"):
             splitmessage = message.content[7:].rsplit(' ')
@@ -62,6 +65,13 @@ class MyClient(discord.Client):
                     championName, is_aram, role_for_url)
                 await message.channel.send(file=discord.File('abilities.png'))
                 await message.channel.send(file=discord.File('items.png'))
+
+        elif message.content.startswith("!tier"):
+            splitmessage = message.content[6:].rsplit(' ')
+            roleName = splitmessage[-1].strip()
+            role_for_url = aliases.get_role_string(roleName)
+            get_top.get_tierlist_by_role(role_for_url)
+            await message.channel.send(file=discord.File('tierlist.png'))
 
     async def on_error(self, event, *args, **kwargs):
         embed = discord.Embed(title=':x: Event Error', colour=0xe74c3c)
