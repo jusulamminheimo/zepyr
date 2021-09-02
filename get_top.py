@@ -17,15 +17,18 @@ options.add_argument('window-size=1920x1080')
 options.binary_location = GOOGLE_CHROME_PATH
 
 def get_tierlist_by_role(role):
-    runes_container_xpath = '/html/body/div[1]/div/div[2]/div[2]/div[2]/div/div/div/div/div[5]/div'
+    tiercontainer_xpath = '/html/body/div[1]/div/div[2]/div[2]/div[2]/div/div/div/div/div[5]/div'
+
     driver = webdriver.Chrome(
         options=options, executable_path=CHROMEDRIVER_PATH)
 
     setup_ugg_page(driver, role)
 
     tierlist = driver.find_element_by_xpath(
-        runes_container_xpath)
+        tiercontainer_xpath)
     tierlist.screenshot("tierlist.png")
+    driver.quit()
+
 
     driver.quit()
 
@@ -49,3 +52,14 @@ def get_url(role):
         return f"https://u.gg/lol/support-tier-list"
     if(role == "jungle"):
         return f"https://u.gg/lol/jungle-tier-list"
+
+
+def setup_ugg_page(driver, role):
+    driver.get(get_url(role))
+    WebDriverWait(driver, 20).until(
+        EC.frame_to_be_available_and_switch_to_it((By.ID, "sp_message_iframe_403856")))
+    button = WebDriverWait(driver, 5).until(EC.element_to_be_clickable(
+        (By.XPATH, '/html/body/div/div[2]/div[5]/button[2]')))
+    button.click()
+    driver.switch_to.default_content()
+
