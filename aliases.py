@@ -7,6 +7,8 @@ def get_role_string(role_name):
         return 'middle'
     if(role_name.startswith('a')):
         return 'adc'
+    if(role_name.startswith('b')):
+        return 'adc'
     if(role_name.startswith('s')):
         return 'support'
 
