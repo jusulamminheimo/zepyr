@@ -39,6 +39,8 @@ def get_url(role):
         return f"https://u.gg/lol/support-tier-list"
     if(role == "jungle"):
         return f"https://u.gg/lol/jungle-tier-list"
+    else:
+        return f"https://u.gg/lol/mid-lane-tier-list"
 
 
 def setup_ugg_page(driver, role):
