@@ -67,8 +67,7 @@ class MyClient(discord.Client):
                 await message.channel.send(file=discord.File('items.png'))
 
         elif message.content.startswith("!tier"):
-            splitmessage = message.content[6:].rsplit(' ')
-            roleName = splitmessage[-1].strip()
+            roleName = message.content[6:]
             role_for_url = aliases.get_role_string(roleName)
             get_top.get_tierlist_by_role(role_for_url)
             await message.channel.send(file=discord.File('tierlist.png'))
