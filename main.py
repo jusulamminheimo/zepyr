@@ -8,9 +8,7 @@ import api_request as api
 import traceback
 import datetime
 import discord_logger as dlogger
-import champion_scrape
 import aliases
-import get_top
 
 
 lol_watcher = zepyr_config.lol_watcher
@@ -46,31 +44,6 @@ class MyClient(discord.Client):
                 else:
                     await message.channel.send("No rank")
 
-        elif message.content.startswith("!runes"):
-            splitmessage = message.content[7:].rsplit(' ')
-            championName = aliases.get_champion_alias(splitmessage[0].strip())
-            roleName = splitmessage[-1].strip()
-            is_aram = '--aram' in message.content
-            has_build = '--build' in message.content
-            has_role = '-role' in message.content
-            role_for_url = ""
-            if(has_role):
-                role_for_url = aliases.get_role_string(roleName)
-            champion_scrape.get_runes_by_champion_name(
-                championName, is_aram, role_for_url)
-            await message.channel.send(file=discord.File('runes.png'))
-
-            if(has_build):
-                champion_scrape.get_build_by_champion_name(
-                    championName, is_aram, role_for_url)
-                await message.channel.send(file=discord.File('abilities.png'))
-                await message.channel.send(file=discord.File('items.png'))
-
-        elif message.content.startswith("!tier"):
-            roleName = message.content[6:]
-            role_for_url = aliases.get_role_string(roleName)
-            get_top.get_tierlist_by_role(role_for_url)
-            await message.channel.send(file=discord.File('tierlist.png'))
 
     async def on_error(self, event, *args, **kwargs):
         embed = discord.Embed(title=':x: Event Error', colour=0xe74c3c)
